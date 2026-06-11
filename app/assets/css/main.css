@@ -2,4 +2,19 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-brand-purple: #7C3AED;
+  --color-brand-pink: #EC4899;
+  --color-brand-orange: #F97316;
+}
+
+/*
+  Reset browser-native :invalid red outline/shadow on all inputs.
+  IMPORTANT: Must be outside any @layer block.
+  In Tailwind v4, @layer base is overridden by @layer utilities (where outline-none lives).
+  Unlayered author styles always beat ALL layered styles in the CSS cascade.
+*/
+input:invalid {
+  box-shadow: none;
+  outline: none;
+  outline-offset: 0;
 }

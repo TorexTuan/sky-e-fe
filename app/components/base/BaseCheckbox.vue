@@ -28,13 +28,13 @@ const handleChange = (event: Event) => {
       type="checkbox"
       :checked="modelValue"
       :disabled="disabled"
-      class="peer h-4 w-4 shrink-0 rounded border border-gray-300 bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-50 text-purple-600 accent-purple-600"
+      class="peer h-4 w-4 shrink-0 cursor-pointer rounded border border-gray-300 bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-50 text-purple-600 accent-purple-600"
       @change="handleChange"
     >
     <label
       v-if="label || $slots.default"
       :for="checkboxId"
-      class="text-sm font-medium leading-none text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      class="cursor-pointer text-sm font-medium leading-none text-gray-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
     >
       <slot>{{ label }}</slot>
     </label>

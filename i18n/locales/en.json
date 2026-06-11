@@ -1,0 +1,74 @@
+{
+  "auth": {
+    "branding": {
+      "title": "Discover the world of unlimited shopping",
+      "subtitle": "Millions of authentic products, attractive deals every day. Shop smart, save more.",
+      "flash_sale_desc": "Up to 70% off",
+      "latest_trends_desc": "Updated every hour",
+      "buyer_protection_desc": "100% money back if not satisfied"
+    },
+    "features": {
+      "flash_sale": "Flash Sale",
+      "latest_trends": "Latest Trends",
+      "buyer_protection": "Buyer Protection"
+    },
+    "stats": {
+      "users": "10M+ Users",
+      "products": "500K+ Products",
+      "satisfaction": "99% Satisfaction"
+    },
+    "form": {
+      "full_name": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "email_placeholder": "name{'@'}example.com",
+      "password_placeholder": "●●●●●●●"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue shopping and track your orders",
+      "forgot_password": "Forgot password?",
+      "remember_me": "Remember me",
+      "submit": "Sign In",
+      "sign_up_now": "Sign up now",
+      "dont_have_account": "Don't have an account?",
+      "error_incorrect": "Incorrect email or password",
+      "social_google": "Continue with Google",
+      "social_facebook": "Continue with Facebook",
+      "social_x": "Continue with X"
+    },
+    "register": {
+      "title": "Create a new account",
+      "subtitle": "Sign up to receive exclusive offers and a wonderful shopping experience",
+      "terms_start": "I agree to the ",
+      "terms_and": " and ",
+      "terms_of_service": "Terms of Service",
+      "privacy_policy": "Privacy Policy",
+      "submit": "Create Account",
+      "sign_in_now": "Sign in now",
+      "already_have_account": "Already have an account?",
+      "success_message": "Registration successful! Please sign in."
+    },
+    "social": {
+      "divider_login": "or continue with",
+      "divider_register": "or sign up with"
+    },
+    "validation": {
+      "required_email": "Please enter your email",
+      "required_password": "Please enter your password",
+      "required_confirm_password": "Please confirm your password",
+      "invalid_email": "Invalid email address",
+      "full_name_min": "Full name must be at least 2 characters",
+      "full_name_max": "Full name must not exceed 100 characters",
+      "email_in_use": "This email is already in use",
+      "invalid_phone": "Invalid phone number (e.g. 0912345678)",
+      "password_min": "Password must be at least 8 characters",
+      "password_strength": "Password must contain uppercase, lowercase, a number, and a special character",
+      "passwords_do_not_match": "Passwords do not match",
+      "terms_required": "You must agree to the Terms of Service to continue",
+      "server_error": "Something went wrong, please try again later"
+    }
+  }
+}

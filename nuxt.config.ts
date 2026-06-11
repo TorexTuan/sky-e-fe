@@ -6,17 +6,26 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   modules: [
-    "@nuxtjs/i18n"
+    "@nuxtjs/i18n",
+    "@pinia/nuxt",
+    "@nuxt/icon"
   ],
   i18n: {
     vueI18n: './i18n/i18n.config.ts',
+    langDir: 'locales/',
     locales: [
       { code: 'vi', file: 'vi.json', name: 'Tiếng Việt' },
       { code: 'en', file: 'en.json', name: 'English' }
     ],
-    defaultLocale: 'vi',
-    lazy: true,
-    strategy: 'no_prefix'
+    defaultLocale: 'vi'
+  },
+  routeRules: {
+    '/auth/**': { ssr: false }
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://localhost:8000'
+    }
   },
   vite: {
     plugins: [tailwindcss()],

@@ -1,0 +1,74 @@
+{
+  "auth": {
+    "branding": {
+      "title": "Khám phá thế giới mua sắm không giới hạn",
+      "subtitle": "Hàng triệu sản phẩm chính hãng, ưu đãi hấp dẫn mỗi ngày. Mua sắm thông minh, tiết kiệm tối đa.",
+      "flash_sale_desc": "Giảm giá lên đến 70%",
+      "latest_trends_desc": "Cập nhật mỗi giờ",
+      "buyer_protection_desc": "Hoàn tiền 100% nếu không hài lòng"
+    },
+    "features": {
+      "flash_sale": "Flash Sale",
+      "latest_trends": "Xu hướng mới nhất",
+      "buyer_protection": "Bảo vệ người mua"
+    },
+    "stats": {
+      "users": "10M+ Người dùng",
+      "products": "500K+ Sản phẩm",
+      "satisfaction": "99% Hài lòng"
+    },
+    "form": {
+      "full_name": "Họ và tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "password": "Mật khẩu",
+      "confirm_password": "Xác nhận mật khẩu",
+      "email_placeholder": "name{'@'}example.com",
+      "password_placeholder": "●●●●●●●"
+    },
+    "login": {
+      "title": "Chào mừng trở lại",
+      "subtitle": "Đăng nhập để tiếp tục mua sắm và theo dõi đơn hàng",
+      "forgot_password": "Quên mật khẩu?",
+      "remember_me": "Ghi nhớ đăng nhập",
+      "submit": "Đăng Nhập",
+      "sign_up_now": "Đăng ký ngay",
+      "dont_have_account": "Chưa có tài khoản?",
+      "error_incorrect": "Email hoặc mật khẩu không chính xác",
+      "social_google": "Tiếp tục với Google",
+      "social_facebook": "Tiếp tục với Facebook",
+      "social_x": "Tiếp tục với X"
+    },
+    "register": {
+      "title": "Tạo tài khoản mới",
+      "subtitle": "Đăng ký để nhận ưu đãi độc quyền và trải nghiệm mua sắm tuyệt vời",
+      "terms_start": "Tôi đồng ý với ",
+      "terms_and": " và ",
+      "terms_of_service": "Điều khoản Dịch vụ",
+      "privacy_policy": "Chính sách Bảo mật",
+      "submit": "Tạo Tài Khoản",
+      "sign_in_now": "Đăng nhập ngay",
+      "already_have_account": "Đã có tài khoản?",
+      "success_message": "Đăng ký thành công! Vui lòng đăng nhập."
+    },
+    "social": {
+      "divider_login": "hoặc tiếp tục với",
+      "divider_register": "hoặc đăng ký với"
+    },
+    "validation": {
+      "required_email": "Vui lòng nhập email",
+      "required_password": "Vui lòng nhập mật khẩu",
+      "required_confirm_password": "Vui lòng xác nhận mật khẩu",
+      "invalid_email": "Địa chỉ email không hợp lệ",
+      "full_name_min": "Họ và tên phải có ít nhất 2 ký tự",
+      "full_name_max": "Họ tên không được vượt quá 100 ký tự",
+      "email_in_use": "Email này đã được sử dụng",
+      "invalid_phone": "Số điện thoại không hợp lệ (ví dụ: 0912345678)",
+      "password_min": "Mật khẩu phải có ít nhất 8 ký tự",
+      "password_strength": "Mật khẩu phải chứa chữ hoa, chữ thường, số và ký tự đặc biệt",
+      "passwords_do_not_match": "Mật khẩu không khớp",
+      "terms_required": "Bạn phải đồng ý với Điều khoản Dịch vụ để tiếp tục",
+      "server_error": "Đã xảy ra lỗi, vui lòng thử lại sau"
+    }
+  }
+}
