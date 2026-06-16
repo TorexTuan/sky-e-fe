@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<{
   variant?: 'primary' | 'outline' | 'ghost' | 'link'
   size?: 'sm' | 'md' | 'lg' | 'icon'
@@ -45,6 +47,7 @@ const computedClasses = computed(() => {
 
 <template>
   <button
+  v-bind="$attrs"
     :type="type"
     :disabled="disabled || isLoading"
     :class="computedClasses"

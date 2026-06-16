@@ -10,12 +10,22 @@ definePageMeta({ layout: 'auth' })
 
 useSeoMeta({ title: 'Skye — Create Account' })
 
-const { t } = useI18n()
+const { t, te } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
 
+/**
+ * Resolve error text: if it's an i18n key → translate, otherwise show raw message.
+ * Zod errors use keys like 'auth.validation.invalid_phone',
+ * Backend DRF errors are raw strings like 'Số điện thoại đã được sử dụng.'
+ */
+const getErrorText = (err?: string) => {
+  if (!err) return undefined
+  return te(err) ? t(err) : err
+}
+
 // --- Form setup with Zod ---
-const { handleSubmit, isSubmitting, meta, setFieldError } = useForm({
+const { handleSubmit, isSubmitting, meta } = useForm({
   validationSchema: toTypedSchema(registerSchema),
   initialValues: {
     fullName: '',
@@ -38,12 +48,29 @@ const { value: terms, errorMessage: termsError } = useField<boolean>('confirmTer
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 
-// --- Server error ---
+// --- Server errors (decoupled from VeeValidate to avoid Zod re-validation overwrite) ---
 const serverError = ref('')
+const serverFieldErrors = ref<Record<string, string>>({})
+
+/**
+ * Get the final error for a field: VeeValidate (Zod) error takes priority,
+ * then server-side error from backend.
+ */
+const getFieldError = (veeError?: string, fieldName?: string) => {
+  if (veeError) return getErrorText(veeError)
+  if (fieldName && serverFieldErrors.value[fieldName]) return serverFieldErrors.value[fieldName]
+  return undefined
+}
+
+// Clear individual server field error when user edits that field
+watch(fullName, () => { delete serverFieldErrors.value.fullName })
+watch(email, () => { delete serverFieldErrors.value.email })
+watch(phone, () => { delete serverFieldErrors.value.phone })
 
 // --- Submit ---
 const onSubmit = handleSubmit(async (values) => {
   serverError.value = ''
+  serverFieldErrors.value = {}
   try {
     await authStore.register(values)
     // Success → redirect to login with toast
@@ -51,15 +78,13 @@ const onSubmit = handleSubmit(async (values) => {
   } catch (err) {
     const parsed = parseApiError(err)
     if (parsed.fieldErrors) {
-      for (const [field, msg] of Object.entries(parsed.fieldErrors)) {
-        setFieldError(field as any, msg)
-      }
+      serverFieldErrors.value = { ...parsed.fieldErrors }
     } else {
       serverError.value = parsed.message
+      // Clear password fields only for general errors (e.g. wrong credentials)
+      password.value = ''
+      confirmPassword.value = ''
     }
-    // Clear password fields on failure
-    password.value = ''
-    confirmPassword.value = ''
   }
 })
 
@@ -84,9 +109,10 @@ const handleSocialLogin = (provider: SocialProvider) => {
     <!-- Server error -->
     <div
       v-if="serverError"
+      data-testid="register-server-error"
       class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
     >
-      {{ t(serverError) }}
+      {{ getErrorText(serverError) }}
     </div>
 
     <!-- Form -->
@@ -94,11 +120,12 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Full Name -->
       <BaseInput
         id="register-fullname"
+        data-testid="register-fullname-input"
         v-model="fullName"
         :label="t('auth.form.full_name')"
         type="text"
         :placeholder="t('auth.form.full_name')"
-        :error="fullNameError ? t(fullNameError) : undefined"
+        :error="getFieldError(fullNameError, 'fullName')"
         @blur="handleFullNameBlur"
       >
         <template #prefix>
@@ -109,11 +136,12 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Email -->
       <BaseInput
         id="register-email"
+        data-testid="register-email-input"
         v-model="email"
         :label="t('auth.form.email')"
         type="email"
         :placeholder="t('auth.form.email_placeholder')"
-        :error="emailError ? t(emailError) : undefined"
+        :error="getFieldError(emailError, 'email')"
         @blur="handleEmailBlur"
       >
         <template #prefix>
@@ -124,11 +152,12 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Phone -->
       <BaseInput
         id="register-phone"
+        data-testid="register-phone-input"
         v-model="phone"
         :label="t('auth.form.phone')"
         type="tel"
         placeholder="0912345678"
-        :error="phoneError ? t(phoneError) : undefined"
+        :error="getFieldError(phoneError, 'phone')"
         @blur="handlePhoneBlur"
       >
         <template #prefix>
@@ -139,11 +168,12 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Password -->
       <BaseInput
         id="register-password"
+        data-testid="register-password-input"
         v-model="password"
         :label="t('auth.form.password')"
         :type="showPassword ? 'text' : 'password'"
         :placeholder="t('auth.form.password_placeholder')"
-        :error="passwordError ? t(passwordError) : undefined"
+        :error="getErrorText(passwordError)"
         @blur="handlePasswordBlur"
       >
         <template #prefix>
@@ -152,6 +182,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
         <template #suffix>
           <button
             type="button"
+            data-testid="register-toggle-password"
             class="cursor-pointer focus:outline-none"
             :aria-label="showPassword ? 'Hide password' : 'Show password'"
             @click="showPassword = !showPassword"
@@ -167,11 +198,12 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Confirm Password -->
       <BaseInput
         id="register-confirm-password"
+        data-testid="register-confirm-password-input"
         v-model="confirmPassword"
         :label="t('auth.form.confirm_password')"
         :type="showConfirmPassword ? 'text' : 'password'"
         :placeholder="t('auth.form.password_placeholder')"
-        :error="confirmPasswordError ? t(confirmPasswordError) : undefined"
+        :error="getErrorText(confirmPasswordError)"
         @blur="handleConfirmPasswordBlur"
       >
         <template #prefix>
@@ -180,6 +212,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
         <template #suffix>
           <button
             type="button"
+            data-testid="register-toggle-confirm-password"
             class="cursor-pointer focus:outline-none"
             :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
             @click="showConfirmPassword = !showConfirmPassword"
@@ -196,6 +229,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <div class="space-y-1">
         <BaseCheckbox
           id="register-terms"
+          data-testid="register-terms-checkbox"
           v-model="terms"
         >
           <span class="text-sm text-gray-700">
@@ -210,13 +244,14 @@ const handleSocialLogin = (provider: SocialProvider) => {
           </span>
         </BaseCheckbox>
         <p v-if="termsError" class="text-sm font-medium text-red-500">
-          {{ t(termsError) }}
+          {{ getErrorText(termsError) }}
         </p>
       </div>
 
       <!-- Submit button -->
       <BaseButton
         id="register-submit"
+        data-testid="register-submit-button"
         type="submit"
         variant="primary"
         size="lg"
@@ -239,6 +274,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
       {{ t('auth.register.already_have_account') }}
       <NuxtLink
         to="/auth/login"
+        data-testid="register-login-link"
         class="cursor-pointer font-semibold text-purple-600 hover:text-purple-700"
       >
         {{ t('auth.register.sign_in_now') }}

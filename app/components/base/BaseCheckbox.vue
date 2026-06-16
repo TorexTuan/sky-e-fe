@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+// Allow passing attributes (like data-testid) to the input
+defineOptions({ inheritAttrs: false })
+
 const props = defineProps<{
   modelValue?: boolean
   label?: string
@@ -24,6 +27,7 @@ const handleChange = (event: Event) => {
 <template>
   <div class="flex items-center space-x-2" :class="props.class">
     <input
+      v-bind="$attrs"
       :id="checkboxId"
       type="checkbox"
       :checked="modelValue"

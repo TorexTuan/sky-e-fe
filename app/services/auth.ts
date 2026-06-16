@@ -83,21 +83,33 @@ export function useAuthService() {
 }
 
 export function parseApiError(error: unknown): { message: string; fieldErrors?: Record<string, string> } {
-  const err = error as { data?: Record<string, unknown>; statusCode?: number }
+  // ofetch FetchError may store response body in err.data or err.response._data
+  const err = error as {
+    data?: Record<string, unknown>
+    response?: { _data?: Record<string, unknown> }
+    statusCode?: number
+  }
+  const responseData = err?.data ?? err?.response?._data
   const fieldErrors: Record<string, string> = {}
 
-  if (err?.data) {
+  if (responseData) {
     // SimpleJWT / DRF detail-based error (e.g. login 401)
-    if (typeof err.data.detail === 'string') {
-      return { message: err.data.detail }
+    if (typeof responseData.detail === 'string') {
+      return { message: responseData.detail }
     }
 
     // DRF field-level validation errors (e.g. register 400)
     // Format: { "fieldName": ["error message", ...] }
     let hasFieldErrors = false
-    for (const [field, messages] of Object.entries(err.data)) {
+    for (const [field, messages] of Object.entries(responseData)) {
+      if (field === 'non_field_errors' && Array.isArray(messages) && messages.length > 0) {
+        return { message: String(messages[0]) }
+      }
+
       if (Array.isArray(messages) && messages.length > 0) {
-        fieldErrors[field] = messages[0] || 'Unknown error'
+        // Convert snake_case field to camelCase
+        const camelField = field.replace(/_([a-z])/g, (g) => g[1].toUpperCase())
+        fieldErrors[camelField] = String(messages[0]) || 'Unknown error'
         hasFieldErrors = true
       }
     }

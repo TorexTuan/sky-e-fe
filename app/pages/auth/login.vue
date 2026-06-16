@@ -87,6 +87,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
     <!-- Server error -->
     <div
       v-if="serverError"
+      data-testid="login-server-error"
       class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
     >
       {{ t(serverError) }}
@@ -105,6 +106,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Email -->
       <BaseInput
         id="login-email"
+        data-testid="login-email-input"
         v-model="email"
         :label="t('auth.form.email')"
         type="email"
@@ -120,6 +122,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Password -->
       <BaseInput
         id="login-password"
+        data-testid="login-password-input"
         v-model="password"
         :label="t('auth.form.password')"
         :type="showPassword ? 'text' : 'password'"
@@ -133,6 +136,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
         <template #label-right>
           <NuxtLink
             to="/auth/forgot-password"
+            data-testid="login-forgot-password-link"
             class="cursor-pointer text-sm font-medium text-purple-600 hover:text-purple-700"
           >
             {{ t('auth.login.forgot_password') }}
@@ -141,6 +145,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
         <template #suffix>
           <button
             type="button"
+            data-testid="login-toggle-password"
             class="cursor-pointer focus:outline-none"
             :aria-label="showPassword ? 'Hide password' : 'Show password'"
             @click="togglePasswordVisibility"
@@ -156,6 +161,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Remember me -->
       <BaseCheckbox
         id="login-remember"
+        data-testid="login-remember-me"
         v-model="rememberMe"
         :label="t('auth.login.remember_me')"
       />
@@ -163,6 +169,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Submit button -->
       <BaseButton
         id="login-submit"
+        data-testid="login-submit-button"
         type="submit"
         variant="primary"
         size="lg"
@@ -184,6 +191,7 @@ const handleSocialLogin = (provider: SocialProvider) => {
       {{ t('auth.login.dont_have_account') }}
       <NuxtLink
         to="/auth/register"
+        data-testid="login-register-link"
         class="cursor-pointer font-semibold text-purple-600 hover:text-purple-700"
       >
         {{ t('auth.login.sign_up_now') }}

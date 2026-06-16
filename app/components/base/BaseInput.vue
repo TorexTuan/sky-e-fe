@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useSlots, computed } from 'vue'
 
+defineOptions({
+  inheritAttrs: false
+})
+
 const props = defineProps<{
   modelValue?: string | number
   label?: string
@@ -56,6 +60,7 @@ const inputClasses = computed(() => {
       </div>
       
       <input
+        v-bind="$attrs"
         :id="inputId"
         :type="type || 'text'"
         :value="modelValue"
@@ -71,7 +76,7 @@ const inputClasses = computed(() => {
       </div>
     </div>
     
-    <p v-if="error" class="text-sm font-medium text-red-500">
+    <p v-if="error" :data-testid="`${$attrs['data-testid'] || inputId}-error`" class="text-sm font-medium text-red-500">
       {{ error }}
     </p>
   </div>
