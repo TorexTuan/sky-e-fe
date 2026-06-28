@@ -6,13 +6,14 @@
  * Handles camelCase ↔ snake_case mapping at the API boundary.
  */
 
-import type { 
-  LoginResponse, 
-  RegisterResponse, 
+import type {
+  LoginResponse,
+  RegisterResponse,
   RefreshTokenResponse,
   LoginPayload,
-  RegisterPayload 
+  RegisterFormData,
 } from '~/types/auth'
+import { normalizePhoneToE164 } from '~/utils/phone'
 
 /**
  * Create auth API functions bound to current locale context.
@@ -37,15 +38,9 @@ export function useAuthService() {
    * Maps camelCase (frontend) → snake_case (backend) for outgoing payload.
    * Maps snake_case (backend) → camelCase (frontend) for incoming response.
    */
-  async function register(data: RegisterPayload): Promise<RegisterResponse> {
-    // Format phone to E.164 for backend based on current locale
-    let formattedPhone = data.phone
-    if (formattedPhone.startsWith('0')) {
-      const nuxtApp = useNuxtApp()
-      const locale = (nuxtApp.$i18n as any)?.locale?.value || 'vi'
-      const prefix = locale === 'vi' ? '+84' : '+1' // Default en to +1
-      formattedPhone = prefix + formattedPhone.slice(1)
-    }
+  async function register(data: RegisterFormData): Promise<RegisterResponse> {
+    // Normalize phone to E.164 using the dial code selected by the user
+    const formattedPhone = normalizePhoneToE164(data.phone, data.phoneDialCode)
 
     const payload = {
       fullName: data.fullName,

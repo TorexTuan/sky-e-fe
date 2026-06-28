@@ -48,7 +48,7 @@ const inputClasses = computed(() => {
 <template>
   <div class="space-y-2 w-full">
     <div v-if="label || slots.label" class="flex items-center justify-between">
-      <label :for="inputId" class="text-sm font-medium leading-none text-gray-700">
+      <label class="text-sm font-medium leading-none text-gray-700" :for="inputId">
         <slot name="label">{{ label }}</slot>
       </label>
       <slot name="label-right" />
@@ -61,12 +61,12 @@ const inputClasses = computed(() => {
       
       <input
         v-bind="$attrs"
+        :class="inputClasses"
+        :disabled="disabled"
         :id="inputId"
         :type="type || 'text'"
         :value="modelValue"
         :placeholder="placeholder"
-        :disabled="disabled"
-        :class="inputClasses"
         @input="handleInput"
         @blur="handleBlur"
       >
@@ -76,7 +76,7 @@ const inputClasses = computed(() => {
       </div>
     </div>
     
-    <p v-if="error" :data-testid="`${$attrs['data-testid'] || inputId}-error`" class="text-sm font-medium text-red-500">
+    <p v-if="error" class="text-sm font-medium text-red-500" :data-testid="`${$attrs['data-testid'] || inputId}-error`">
       {{ error }}
     </p>
   </div>

@@ -9,7 +9,7 @@ defineProps<{
 <template>
   <div class="flex items-start gap-4 rounded-xl bg-white/10 p-4 backdrop-blur-md transition-transform duration-200 hover:scale-[1.02]">
     <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/20">
-      <Icon :name="icon" class="h-5 w-5 text-white" />
+      <Icon class="h-5 w-5 text-white" :name="icon" />
     </div>
     <div class="min-w-0">
       <h3 class="text-sm font-bold text-white">{{ title }}</h3>

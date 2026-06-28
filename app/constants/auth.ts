@@ -2,11 +2,52 @@
  * Auth-related constants
  */
 
+// --- Phone Country Config ---
+export interface PhoneCountry {
+  code: string       // ISO 3166-1 alpha-2
+  dialCode: string   // e.g. '+84'
+  flag: string       // Nuxt Icon name
+  label: string      // Display label
+  /** Regex for the subscriber number ONLY (without dial code, without leading 0) */
+  subscriberRegex: RegExp
+  /** Regex for local format WITH leading 0 (optional shortcut) */
+  localRegex: RegExp
+  exampleSubscriber: string // e.g. '912345678'
+}
+
+export const PHONE_COUNTRIES: PhoneCountry[] = [
+  {
+    code: 'VN',
+    dialCode: '+84',
+    flag: 'twemoji:flag-vietnam',
+    label: 'Vietnam (+84)',
+    // Subscriber: [3-9]\d{8} (9 digits, first digit 3-9)
+    subscriberRegex: /^[3-9]\d{8}$/,
+    // Local: 0[3-9]\d{8} (10 digits with leading 0)
+    localRegex: /^0[3-9]\d{8}$/,
+    exampleSubscriber: '912345678',
+  },
+  {
+    code: 'US',
+    dialCode: '+1',
+    flag: 'twemoji:flag-united-states',
+    label: 'United States (+1)',
+    // Subscriber: [2-9]\d{9} (10 digits, area code cannot start with 0 or 1)
+    subscriberRegex: /^[2-9]\d{9}$/,
+    // US has no local 0-prefix format
+    localRegex: /^[2-9]\d{9}$/,
+    exampleSubscriber: '2025551234',
+  },
+] as const
+
+export const PHONE_COUNTRIES_MAP = Object.fromEntries(
+  PHONE_COUNTRIES.map((c) => [c.dialCode, c]),
+) as Record<string, PhoneCountry>
+
 // --- Validation Rules ---
 export const VALIDATION_RULES = {
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   PASSWORD_REGEX: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$/,
-  PHONE_REGEX: /^(\+\d{1,3}|0)\d{8,14}$/,
   FULL_NAME_MIN_LENGTH: 2,
   FULL_NAME_MAX_LENGTH: 100,
   PASSWORD_MIN_LENGTH: 8,

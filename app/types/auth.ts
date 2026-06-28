@@ -6,13 +6,22 @@
  */
 
 import type { LoginFormData, RegisterFormData } from '~/schemas/auth'
+import type { PhoneCountry } from '~/constants/auth'
 
 // Re-export form data types from Zod schemas
 export type { LoginFormData, RegisterFormData }
 
+// Re-export PhoneCountry for use across the app
+export type { PhoneCountry }
+
 // --- API Payloads ---
 export type LoginPayload = Omit<LoginFormData, 'rememberMe'>
-export type RegisterPayload = RegisterFormData
+
+/**
+ * RegisterPayload strips phoneDialCode from the form data
+ * since the service normalizes it into the phone field as E.164 before sending.
+ */
+export type RegisterPayload = Omit<RegisterFormData, 'phoneDialCode'>
 
 // --- API Responses ---
 export interface LoginResponse {

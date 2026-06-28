@@ -30,13 +30,13 @@ const providerLabels: Record<SocialProvider, string> = {
     <div class="grid grid-cols-3 gap-3">
       <button
         v-for="provider in SOCIAL_PROVIDERS"
-        :key="provider"
-        type="button"
         class="flex h-11 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 cursor-pointer transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+        type="button"
+        :key="provider"
         :aria-label="providerLabels[provider]"
         @click="emit('social-login', provider)"
       >
-        <Icon :name="SOCIAL_PROVIDER_ICONS[provider]" class="h-5 w-5" />
+        <Icon class="h-5 w-5" :name="SOCIAL_PROVIDER_ICONS[provider]" />
       </button>
     </div>
   </div>

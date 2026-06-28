@@ -25,11 +25,17 @@ const getErrorText = (err?: string) => {
 }
 
 // --- Form setup with Zod ---
+const { locale } = useI18n()
+
+// Default dial code based on current locale
+const defaultDialCode = computed(() => locale.value === 'vi' ? '+84' : '+1')
+
 const { handleSubmit, isSubmitting, meta } = useForm({
   validationSchema: toTypedSchema(registerSchema),
   initialValues: {
     fullName: '',
     email: '',
+    phoneDialCode: defaultDialCode.value,
     phone: '',
     password: '',
     confirmPassword: '',
@@ -39,6 +45,7 @@ const { handleSubmit, isSubmitting, meta } = useForm({
 
 const { value: fullName, errorMessage: fullNameError, handleBlur: handleFullNameBlur } = useField<string>('fullName')
 const { value: email, errorMessage: emailError, handleBlur: handleEmailBlur } = useField<string>('email')
+const { value: phoneDialCode } = useField<string>('phoneDialCode')
 const { value: phone, errorMessage: phoneError, handleBlur: handlePhoneBlur } = useField<string>('phone')
 const { value: password, errorMessage: passwordError, handleBlur: handlePasswordBlur } = useField<string>('password')
 const { value: confirmPassword, errorMessage: confirmPasswordError, handleBlur: handleConfirmPasswordBlur } = useField<string>('confirmPassword')
@@ -66,6 +73,21 @@ const getFieldError = (veeError?: string, fieldName?: string) => {
 watch(fullName, () => { delete serverFieldErrors.value.fullName })
 watch(email, () => { delete serverFieldErrors.value.email })
 watch(phone, () => { delete serverFieldErrors.value.phone })
+
+// Disable submit button if any field currently shows an error (Zod or server)
+const hasVisibleErrors = computed(() => {
+  const veeErrors = [fullNameError.value, emailError.value, phoneError.value, passwordError.value, confirmPasswordError.value, termsError.value]
+  const hasVeeError = veeErrors.some(Boolean)
+  const hasServerFieldError = Object.keys(serverFieldErrors.value).length > 0
+  return hasVeeError || hasServerFieldError
+})
+
+// Keep phoneDialCode in sync if locale changes after mount
+watch(locale, (newLocale) => {
+  if (!phone.value) {
+    phoneDialCode.value = newLocale === 'vi' ? '+84' : '+1'
+  }
+})
 
 // --- Submit ---
 const onSubmit = handleSubmit(async (values) => {
@@ -109,8 +131,8 @@ const handleSocialLogin = (provider: SocialProvider) => {
     <!-- Server error -->
     <div
       v-if="serverError"
-      data-testid="register-server-error"
       class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
+      data-testid="register-server-error"
     >
       {{ getErrorText(serverError) }}
     </div>
@@ -119,57 +141,52 @@ const handleSocialLogin = (provider: SocialProvider) => {
     <form class="space-y-4" novalidate @submit.prevent="onSubmit">
       <!-- Full Name -->
       <BaseInput
-        id="register-fullname"
-        data-testid="register-fullname-input"
         v-model="fullName"
-        :label="t('auth.form.full_name')"
+        id="register-fullname"
         type="text"
+        data-testid="register-fullname-input"
+        :label="t('auth.form.full_name')"
         :placeholder="t('auth.form.full_name')"
         :error="getFieldError(fullNameError, 'fullName')"
         @blur="handleFullNameBlur"
       >
         <template #prefix>
-          <Icon name="mdi:account-outline" class="h-5 w-5" />
+          <Icon class="h-5 w-5" name="mdi:account-outline" />
         </template>
       </BaseInput>
 
       <!-- Email -->
       <BaseInput
-        id="register-email"
-        data-testid="register-email-input"
         v-model="email"
-        :label="t('auth.form.email')"
+        id="register-email"
         type="email"
+        data-testid="register-email-input"
+        :label="t('auth.form.email')"
         :placeholder="t('auth.form.email_placeholder')"
         :error="getFieldError(emailError, 'email')"
         @blur="handleEmailBlur"
       >
         <template #prefix>
-          <Icon name="mdi:email-outline" class="h-5 w-5" />
+          <Icon class="h-5 w-5" name="mdi:email-outline" />
         </template>
       </BaseInput>
 
       <!-- Phone -->
-      <BaseInput
+      <BasePhoneInput
+        v-model="phone"
+        v-model:dialCode="phoneDialCode"
         id="register-phone"
         data-testid="register-phone-input"
-        v-model="phone"
         :label="t('auth.form.phone')"
-        type="tel"
-        placeholder="0912345678"
         :error="getFieldError(phoneError, 'phone')"
         @blur="handlePhoneBlur"
-      >
-        <template #prefix>
-          <Icon name="mdi:phone-outline" class="h-5 w-5" />
-        </template>
-      </BaseInput>
+      />
 
       <!-- Password -->
       <BaseInput
+        v-model="password"
         id="register-password"
         data-testid="register-password-input"
-        v-model="password"
         :label="t('auth.form.password')"
         :type="showPassword ? 'text' : 'password'"
         :placeholder="t('auth.form.password_placeholder')"
@@ -177,19 +194,19 @@ const handleSocialLogin = (provider: SocialProvider) => {
         @blur="handlePasswordBlur"
       >
         <template #prefix>
-          <Icon name="mdi:lock-outline" class="h-5 w-5" />
+          <Icon class="h-5 w-5" name="mdi:lock-outline" />
         </template>
         <template #suffix>
           <button
+            class="cursor-pointer focus:outline-none"
             type="button"
             data-testid="register-toggle-password"
-            class="cursor-pointer focus:outline-none"
             :aria-label="showPassword ? 'Hide password' : 'Show password'"
             @click="showPassword = !showPassword"
           >
             <Icon
-              :name="showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'"
               class="h-5 w-5 text-gray-400 transition-colors hover:text-gray-600"
+              :name="showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'"
             />
           </button>
         </template>
@@ -197,9 +214,9 @@ const handleSocialLogin = (provider: SocialProvider) => {
 
       <!-- Confirm Password -->
       <BaseInput
+        v-model="confirmPassword"
         id="register-confirm-password"
         data-testid="register-confirm-password-input"
-        v-model="confirmPassword"
         :label="t('auth.form.confirm_password')"
         :type="showConfirmPassword ? 'text' : 'password'"
         :placeholder="t('auth.form.password_placeholder')"
@@ -207,19 +224,19 @@ const handleSocialLogin = (provider: SocialProvider) => {
         @blur="handleConfirmPasswordBlur"
       >
         <template #prefix>
-          <Icon name="mdi:lock-outline" class="h-5 w-5" />
+          <Icon class="h-5 w-5" name="mdi:lock-outline" />
         </template>
         <template #suffix>
           <button
+            class="cursor-pointer focus:outline-none"
             type="button"
             data-testid="register-toggle-confirm-password"
-            class="cursor-pointer focus:outline-none"
             :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
             @click="showConfirmPassword = !showConfirmPassword"
           >
             <Icon
-              :name="showConfirmPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'"
               class="h-5 w-5 text-gray-400 transition-colors hover:text-gray-600"
+              :name="showConfirmPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'"
             />
           </button>
         </template>
@@ -228,36 +245,36 @@ const handleSocialLogin = (provider: SocialProvider) => {
       <!-- Terms & Conditions -->
       <div class="space-y-1">
         <BaseCheckbox
+          v-model="terms"
           id="register-terms"
           data-testid="register-terms-checkbox"
-          v-model="terms"
         >
           <span class="text-sm text-gray-700">
             {{ t('auth.register.terms_start') }}
-            <NuxtLink to="#" class="cursor-pointer font-medium text-purple-600 hover:text-purple-700">
+            <NuxtLink class="cursor-pointer font-medium text-purple-600 hover:text-purple-700" to="#">
               {{ t('auth.register.terms_of_service') }}
             </NuxtLink>
             {{ t('auth.register.terms_and') }}
-            <NuxtLink to="#" class="cursor-pointer font-medium text-purple-600 hover:text-purple-700">
+            <NuxtLink class="cursor-pointer font-medium text-purple-600 hover:text-purple-700" to="#">
               {{ t('auth.register.privacy_policy') }}
             </NuxtLink>
           </span>
         </BaseCheckbox>
-        <p v-if="termsError" class="text-sm font-medium text-red-500">
+        <p v-if="termsError" class="text-sm font-medium text-red-500" data-testid="register-terms-error">
           {{ getErrorText(termsError) }}
         </p>
       </div>
 
       <!-- Submit button -->
       <BaseButton
+        :class="['w-full', hasVisibleErrors ? 'cursor-not-allowed' : 'cursor-pointer']"
         id="register-submit"
-        data-testid="register-submit-button"
         type="submit"
+        data-testid="register-submit-button"
         variant="primary"
         size="lg"
-        :class="['w-full', { 'cursor-pointer': meta.valid && meta.touched }]"
         :is-loading="isSubmitting"
-        :disabled="!meta.valid && meta.touched"
+        :disabled="hasVisibleErrors"
       >
         {{ t('auth.register.submit') }}
       </BaseButton>
@@ -273,9 +290,9 @@ const handleSocialLogin = (provider: SocialProvider) => {
     <p class="text-center text-sm text-gray-500">
       {{ t('auth.register.already_have_account') }}
       <NuxtLink
+        class="cursor-pointer font-semibold text-purple-600 hover:text-purple-700"
         to="/auth/login"
         data-testid="register-login-link"
-        class="cursor-pointer font-semibold text-purple-600 hover:text-purple-700"
       >
         {{ t('auth.register.sign_in_now') }}
       </NuxtLink>
