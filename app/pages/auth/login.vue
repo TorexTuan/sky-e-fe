@@ -87,8 +87,8 @@ const handleSocialLogin = (provider: SocialProvider) => {
     <!-- Server error -->
     <div
       v-if="serverError"
-      data-testid="login-server-error"
       class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
+      data-testid="login-server-error"
     >
       {{ t(serverError) }}
     </div>
@@ -105,25 +105,25 @@ const handleSocialLogin = (provider: SocialProvider) => {
     <form class="space-y-5" novalidate @submit.prevent="onSubmit">
       <!-- Email -->
       <BaseInput
-        id="login-email"
-        data-testid="login-email-input"
         v-model="email"
-        :label="t('auth.form.email')"
+        id="login-email"
         type="email"
+        data-testid="login-email-input"
+        :label="t('auth.form.email')"
         :placeholder="t('auth.form.email_placeholder')"
         :error="emailError ? t(emailError) : undefined"
         @blur="handleEmailBlur"
       >
         <template #prefix>
-          <Icon name="mdi:email-outline" class="h-5 w-5" />
+          <Icon class="h-5 w-5" name="mdi:email-outline" />
         </template>
       </BaseInput>
 
       <!-- Password -->
       <BaseInput
+        v-model="password"
         id="login-password"
         data-testid="login-password-input"
-        v-model="password"
         :label="t('auth.form.password')"
         :type="showPassword ? 'text' : 'password'"
         :placeholder="t('auth.form.password_placeholder')"
@@ -131,28 +131,28 @@ const handleSocialLogin = (provider: SocialProvider) => {
         @blur="handlePasswordBlur"
       >
         <template #prefix>
-          <Icon name="mdi:lock-outline" class="h-5 w-5" />
+          <Icon class="h-5 w-5" name="mdi:lock-outline" />
         </template>
         <template #label-right>
           <NuxtLink
+            class="cursor-pointer text-sm font-medium text-purple-600 hover:text-purple-700"
             to="/auth/forgot-password"
             data-testid="login-forgot-password-link"
-            class="cursor-pointer text-sm font-medium text-purple-600 hover:text-purple-700"
           >
             {{ t('auth.login.forgot_password') }}
           </NuxtLink>
         </template>
         <template #suffix>
           <button
+            class="cursor-pointer focus:outline-none"
             type="button"
             data-testid="login-toggle-password"
-            class="cursor-pointer focus:outline-none"
             :aria-label="showPassword ? 'Hide password' : 'Show password'"
             @click="togglePasswordVisibility"
           >
             <Icon
-              :name="showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'"
               class="h-5 w-5 text-gray-400 transition-colors hover:text-gray-600"
+              :name="showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'"
             />
           </button>
         </template>
@@ -160,20 +160,20 @@ const handleSocialLogin = (provider: SocialProvider) => {
 
       <!-- Remember me -->
       <BaseCheckbox
+        v-model="rememberMe"
         id="login-remember"
         data-testid="login-remember-me"
-        v-model="rememberMe"
         :label="t('auth.login.remember_me')"
       />
 
       <!-- Submit button -->
       <BaseButton
+        class="w-full"
         id="login-submit"
-        data-testid="login-submit-button"
         type="submit"
+        data-testid="login-submit-button"
         variant="primary"
         size="lg"
-        class="w-full"
         :is-loading="isSubmitting"
       >
         {{ t('auth.login.submit') }}
@@ -190,9 +190,9 @@ const handleSocialLogin = (provider: SocialProvider) => {
     <p class="text-center text-sm text-gray-500">
       {{ t('auth.login.dont_have_account') }}
       <NuxtLink
+        class="cursor-pointer font-semibold text-purple-600 hover:text-purple-700"
         to="/auth/register"
         data-testid="login-register-link"
-        class="cursor-pointer font-semibold text-purple-600 hover:text-purple-700"
       >
         {{ t('auth.login.sign_up_now') }}
       </NuxtLink>

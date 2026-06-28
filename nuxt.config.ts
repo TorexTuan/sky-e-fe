@@ -17,7 +17,13 @@ export default defineNuxtConfig({
       { code: 'vi', file: 'vi.json', name: 'Tiếng Việt' },
       { code: 'en', file: 'en.json', name: 'English' }
     ],
-    defaultLocale: 'vi'
+    defaultLocale: 'vi',
+    strategy: 'no_prefix',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      alwaysRedirect: true
+    }
   },
   routeRules: {
     '/auth/**': { ssr: false }

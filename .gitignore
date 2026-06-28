@@ -28,5 +28,3 @@ requirement/
 .agents/
 mockups/
 docs/
-playwright-report/
-test-results/

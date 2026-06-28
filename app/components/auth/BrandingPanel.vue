@@ -12,7 +12,7 @@ const { t } = useI18n()
 
     <!-- Logo -->
     <div class="relative z-10 flex items-center gap-3">
-      <Icon name="mdi:shopping" size="32" class="shrink-0 text-white" />
+      <Icon class="shrink-0 text-white" name="mdi:shopping" size="32" />
       <span class="text-2xl font-bold leading-none tracking-tight">Skye</span>
     </div>
 

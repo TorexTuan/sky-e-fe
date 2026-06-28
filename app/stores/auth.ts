@@ -79,14 +79,7 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
 
     try {
-      const response = await registerApi({
-        fullName: data.fullName,
-        email: data.email,
-        phone: data.phone,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-        confirmTermsAndConditions: data.confirmTermsAndConditions,
-      })
+      const response = await registerApi(data)
       return response
     } catch (err) {
       const parsed = parseApiError(err)
