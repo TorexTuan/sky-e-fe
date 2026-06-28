@@ -267,12 +267,12 @@ const handleSocialLogin = (provider: SocialProvider) => {
 
       <!-- Submit button -->
       <BaseButton
-        :class="['w-full', hasVisibleErrors ? 'cursor-not-allowed' : 'cursor-pointer']"
         id="register-submit"
         type="submit"
         data-testid="register-submit-button"
         variant="primary"
         size="lg"
+        :class="['w-full', hasVisibleErrors ? 'cursor-not-allowed' : 'cursor-pointer']"
         :is-loading="isSubmitting"
         :disabled="hasVisibleErrors"
       >

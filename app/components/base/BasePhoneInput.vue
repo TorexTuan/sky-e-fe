@@ -89,10 +89,10 @@ const triggerClasses = computed(() =>
     <div ref="dropdownRef" class="relative flex">
       <!-- Country Dropdown Trigger -->
       <button
-        :class="triggerClasses"
         type="button"
         data-testid="phone-country-trigger"
         aria-haspopup="listbox"
+        :class="triggerClasses"
         :disabled="disabled"
         :aria-expanded="isOpen"
         @click="toggleDropdown"
@@ -109,9 +109,9 @@ const triggerClasses = computed(() =>
       <!-- Phone Number Input -->
       <input
         v-bind="$attrs"
-        :class="inputClasses"
         type="tel"
         :id="inputId"
+        :class="inputClasses"
         :disabled="disabled"
         :value="modelValue"
         :placeholder="selectedCountry.exampleSubscriber"
@@ -138,9 +138,9 @@ const triggerClasses = computed(() =>
           <li
             v-for="country in PHONE_COUNTRIES"
             class="flex cursor-pointer items-center gap-3 px-3 py-2.5 text-sm text-gray-700 transition-colors hover:bg-purple-50 hover:text-purple-700"
-            :class="{ 'bg-purple-50 font-medium text-purple-700': country.dialCode === dialCode }"
             role="option"
             :key="country.code"
+            :class="{ 'bg-purple-50 font-medium text-purple-700': country.dialCode === dialCode }"
             :aria-selected="country.dialCode === dialCode"
             :data-testid="`phone-country-option-${country.code.toLowerCase()}`"
             @click="selectCountry(country)"
